@@ -35,10 +35,13 @@ const getAllPegawai = () => {
     return dbConnection.execute(query)
 }
 
+
+
 module.exports = {
     addPegawai,
     updatePegawai,
     deletePegawai,
     getSinglePegawai,
-    getAllPegawai
+    getAllPegawai,
+
 }

@@ -35,6 +35,10 @@ const getSingleAdmin = (id_admin) => {
     const query = `SELECT * FROM tbl_admin WHERE id_admin = ${id_admin}`
     return dbConnection.execute(query)
 }
+const updateLoginTime = (id_admin)=> {
+    const query = `UPDATE tbl_admin SET last_login= NOW() WHERE id_admin = ${id_admin};`
+    return dbConnection.execute(query)
+}
 
 
 module.exports = {
@@ -43,5 +47,6 @@ module.exports = {
     updateAdmin,
     deleteAdmin,
     loginAdmin,
-    getSingleAdmin
+    getSingleAdmin,
+    updateLoginTime
 }

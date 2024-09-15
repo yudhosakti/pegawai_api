@@ -34,9 +34,13 @@ const loginAdmin = async(req,response) => {
                 message: "User Not Found"
         })
         } else {
-          response.json({
-             data: data[0]
+          await adminModel.updateLoginTime(data[0].id_admin).then(async(result) => {
+            const [dataNew] = await adminModel.loginAdmin(dataInsert.email,dataInsert.password)
+                response.json({
+             data: dataNew[0]
           })  
+          })
+          
         }
 
 

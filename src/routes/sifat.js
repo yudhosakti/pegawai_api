@@ -4,14 +4,24 @@ const express = require('express')
 
 const router = express.Router()
 
-router.get('/',sifatController.getAllSifatByIdPegawai)
+router.get('/kelebihan',sifatController.getAllKelebihanByIdPegawai)
 
-router.get('/single',sifatController.getSingleSifatPegawai)
+router.get('/kelebihan/single',sifatController.getSingleKelebihanPegawai)
 
-router.post('/',sifatController.addSifatPegawai)
+router.post('/kelebihan',sifatController.addKelebihanPegawai)
 
-router.put('/',sifatController.updateSifatPegawai)
+router.put('/kelebihan',sifatController.updateKelebihanPegawai)
 
-router.delete('/',sifatController.deleteSifatPegawai)
+router.delete('/kelebihan',sifatController.deleteKelebihanPegawai)
+
+router.get('/kekurangan',sifatController.getAllKekuranganByIdPegawai)
+
+router.get('/kekurangan/single',sifatController.getSingleKekuranganPegawai)
+
+router.post('/kekurangan',sifatController.addKekuranganPegawai)
+
+router.put('/kekurangan',sifatController.updateKekuranganPegawai)
+
+router.delete('/kekurangan',sifatController.deleteKekuranganPegawai)
 
 module.exports = router
