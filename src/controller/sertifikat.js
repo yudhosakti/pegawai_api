@@ -4,6 +4,7 @@ const fs = require('fs')
 const pegawaiModel = require('../models/pegawai')
 
 
+
 const addSertifikatPegawai = async(req,response) => {
     const dataInsert = req.body
     let image = ''

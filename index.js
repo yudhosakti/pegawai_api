@@ -7,6 +7,7 @@ const adminRoutes = require('./src/routes/admin')
 const pegawaiRoutes = require('./src/routes/pegawai')
 const sifatRoutes = require('./src/routes/sifat')
 const sertifikatRoutes = require('./src/routes/sertifikat')
+const diklatRoutes = require('./src/routes/diklat')
 
 const fileStorage = multer.diskStorage({
     destination: (req,res,cb) => {
@@ -18,13 +19,8 @@ const fileStorage = multer.diskStorage({
 })
 const app = express();
 const fileFilter = (req,res,cb) => {
-    if (res.mimetype == 'image/png' || res.mimetype == 'image/jpg' || res.mimetype == 'image/jpeg') {
-        cb(null,true)
-    }else{
-        cb(null,false)
-    }
+    cb(null,true)
 }
-
 
 let port  = 4000;
 
@@ -42,6 +38,8 @@ app.use('/pegawai',pegawaiRoutes)
 app.use('/trait',sifatRoutes)
 
 app.use('/certificate',sertifikatRoutes)
+
+app.use('/diklat',diklatRoutes)
 
 app.listen(port, () => {
     console.log(`Server started on port`,port);
