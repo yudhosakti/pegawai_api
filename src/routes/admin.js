@@ -12,7 +12,7 @@ router.post('/register',adminController.addAdmin)
 
 router.put('/',adminController.updateAdmin)
 
-router.delete('/',adminController.deleteAdmin)
+router.put('/status',adminController.deleteAdmin)
 
 
 

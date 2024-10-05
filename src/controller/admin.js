@@ -6,7 +6,7 @@ const getAllAdmin = async(req,response)=> {
         let dataFinal = []
         for (let index = 0; index < data.length; index++) {
             dataFinal.push({
-                id_admin: data[index].id_admin,
+                id_user: data[index].id_user,
                 username: data[index].username,
                 avatar: data[index].avatar
             })
@@ -34,7 +34,7 @@ const loginAdmin = async(req,response) => {
                 message: "User Not Found"
         })
         } else {
-          await adminModel.updateLoginTime(data[0].id_admin).then(async(result) => {
+          await adminModel.updateLoginTime(data[0].id_user).then(async(result) => {
             const [dataNew] = await adminModel.loginAdmin(dataInsert.email,dataInsert.password)
                 response.json({
              data: dataNew[0]
@@ -74,7 +74,8 @@ const addAdmin = async(req,response) => {
 }
 
 const deleteAdmin = async(req,response) => {
-    const idAdmin = req.query.id_admin
+    const idAdmin = req.query.id_user
+    const dataInsert = req.query.status
     try {
         const [data] = await adminModel.getSingleAdmin(idAdmin)
         if (data.length == 0) {
@@ -82,19 +83,9 @@ const deleteAdmin = async(req,response) => {
                 message: "User Not Found"
             })
         } else {
-            if (data[0].avatar != null) {
-                let path = data[0].avatar
-            fs.unlink(path,(err) => {
-                if (err) {
-                    console.log(err)
-                    }else{
-                    console.log("Berhasil Hapus")
-                    }
-                    })
-            }
-            await adminModel.deleteAdmin(idAdmin).then((result) => {
+            await adminModel.deleteAdmin(idAdmin,dataInsert).then((result) => {
               response.json({
-                message: "Admin Delete Succes"
+                message: "Admin Update Status Succes"
               })
             }).catch((err) => {
                 response.status(500).json({
@@ -118,7 +109,7 @@ const updateAdmin = async(req,response) => {
         image = req.file.path.replace(/\\/g, '/'); 
     }
     try {
-        const [data] = await adminModel.getSingleAdmin(dataInsert.id_admin)
+        const [data] = await adminModel.getSingleAdmin(dataInsert.id_user)
         if (data.length == 0) {
             if (image != '') {
                 let path = image
@@ -144,7 +135,7 @@ const updateAdmin = async(req,response) => {
                 }
                 })
             }
-            await adminModel.updateAdmin(dataInsert.id_admin,image,dataInsert.username).then((result) => {
+            await adminModel.updateAdmin(dataInsert.id_user,image,dataInsert.username).then((result) => {
                  response.json({
                     message: "Update Success"
                  })
@@ -169,6 +160,30 @@ const updateAdmin = async(req,response) => {
     }
 }
 
+const getRecentUser = async(req,response) => {
+    try {
+        const [data] = await adminModel.getRecentUser()
+        let dataFinal = []
+        for (let index = 0; index < data.length; index++) {
+            dataFinal.push({
+                id_user: data[index].id_user,
+                username: data[index].username,
+                avatar: data[index].avatar
+            })
+            
+        }
+
+        response.json({
+            data: dataFinal
+        })
+        
+    } catch (error) {
+        response.status(500).json({
+            message: error
+    })
+    }
+}
+
 
 
 module.exports = {
@@ -176,5 +191,6 @@ module.exports = {
     loginAdmin,
     addAdmin,
     updateAdmin,
-    deleteAdmin
+    deleteAdmin,
+    getRecentUser
 }

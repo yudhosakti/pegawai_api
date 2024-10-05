@@ -21,7 +21,7 @@ const addSertifikatPegawai = async(req,response) => {
                 message: "Pegawai Not Found"
             })
         } else {
-           await sertifikatModel.addSertifikatPegawai(dataInsert.id_pegawai,dataInsert.id_admin,dataInsert.nama_sertifikat,image).then((result) => {
+           await sertifikatModel.addSertifikatPegawai(dataInsert.id_pegawai,dataInsert.id_user,dataInsert.nama_sertifikat,image).then((result) => {
             response.json({
                 message: "Sertifikat Berhasil Ditambahkan"
             })
@@ -99,10 +99,10 @@ const updateSertifikatPegawai = async(req,response) => {
                 message: "Data Not Found"
             })
         } else {
-            if (image != '' && data[0].bukti_sertifikat != null) {
-                globalFunc.hapusGambar(fs,data[0].bukti_sertifikat)
+            if (image != '' && data[0].foto != null) {
+                globalFunc.hapusGambar(fs,data[0].foto)
             }
-            await sertifikatModel.updateSertifikatPegawai(dataInsert.idSertifikat,dataInsert.nama_sertifikat,image,dataInsert.id_admin).then((result) => {
+            await sertifikatModel.updateSertifikatPegawai(dataInsert.idSertifikat,dataInsert.nama_sertifikat,image,dataInsert.id_user).then((result) => {
                 response.json({
                     message: "Update Success",
                     data : dataInsert
@@ -130,8 +130,8 @@ const deleteSertifikatPegawai = async(req,response) => {
                 message: "Data Not Found"
             })
         } else {
-            if (data[0].bukti_sertifikat != null) {
-                globalFunc.hapusGambar(fs,data[0].bukti_sertifikat)
+            if (data[0].foto != null) {
+                globalFunc.hapusGambar(fs,data[0].foto)
             }
             await sertifikatModel.deleteSertifikatPegawai(idSertifikat).then((result) => {
                 response.json({

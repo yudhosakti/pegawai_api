@@ -31,7 +31,7 @@ app.use(express.json())
 
 
 
-app.use('/admin',adminRoutes)
+app.use('/user',adminRoutes)
 
 app.use('/pegawai',pegawaiRoutes)
 

@@ -4,7 +4,7 @@ const dbConnection = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'db_pegawai'
+    database: 'db_pegawai_bps'
 });
 
 module.exports = dbConnection.promise();

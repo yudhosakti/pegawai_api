@@ -1,28 +1,41 @@
 const dbConnection = require('../config/koneksi')
 
-const addDiklatPegawai = (id_pegawai,diklat,id_admin) => {
-    const query = `INSERT INTO tbl_diklat(id_pegawai,id_admin,nama_diklat) 
-    VALUES (${id_pegawai},${id_admin},'${diklat}')`
+const addDiklatPegawai = (id_pegawai,diklat,id_user,foto) => {
+    if (foto == '') {
+        const query = `INSERT INTO tbl_diklat_pegawai(id_pegawai,id_user,diklat,foto) 
+    VALUES (${id_pegawai},${id_user},'${diklat},NULL)`
     return dbConnection.execute(query)
+    }else{
+        const query = `INSERT INTO tbl_diklat_pegawai(id_pegawai,id_user,diklat,foto) 
+        VALUES (${id_pegawai},${id_user},'${diklat}','${foto}')`
+        return dbConnection.execute(query)
+    }
+   
 }
 
 const getSingleDiklatPegawai = (id_sifat) => {
-    const query = `SELECT * FROM tbl_diklat WHERE id_diklat = ${id_sifat}`
+    const query = `SELECT * FROM tbl_diklat_pegawai WHERE id_diklat = ${id_sifat}`
     return dbConnection.execute(query)
 }
 
 const getAlldiklatByIdPegawai = (id_pegawai) => {
-    const query =`SELECT * FROM tbl_diklat WHERE id_pegawai = ${id_pegawai}`
+    const query =`SELECT * FROM tbl_diklat_pegawai WHERE id_pegawai = ${id_pegawai}`
     return dbConnection.execute(query)
 }
 
-const updateDiklatPegawai = (id_diklat,diklat,id_admin) => {
-    const query = `UPDATE tbl_diklat SET id_admin= ${id_admin}, nama_diklat='${diklat}' WHERE id_diklat = ${id_diklat}`
+const updateDiklatPegawai = (id_diklat,diklat,id_user,foto) => {
+    if (foto == '') {
+    const query = `UPDATE tbl_diklat_pegawai SET id_user= ${id_user}, diklat='${diklat}' WHERE id_diklat = ${id_diklat}`
     return dbConnection.execute(query)
+    }else{
+    const query = `UPDATE tbl_diklat_pegawai SET id_user= ${id_user}, diklat='${diklat}', foto = '${foto}' WHERE id_diklat = ${id_diklat}`
+    return dbConnection.execute(query)
+    }
+    
 }
 
 const deleteDiklatPegawai = (id_diklat) => {
-    const query = `DELETE FROM tbl_diklat WHERE id_diklat = ${id_diklat}`
+    const query = `DELETE FROM tbl_diklat_pegawai WHERE id_diklat = ${id_diklat}`
     return dbConnection.execute(query)
 }
 

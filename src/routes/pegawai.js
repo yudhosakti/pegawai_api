@@ -16,6 +16,9 @@ router.get('/detail', pegawaiController.getDetailPegawaiFull)
 
 router.put('/',pegawaiController.updatePegawai)
 
+router.put('/profile',pegawaiController.updateProfilePegawai)
+router.put('/valid',pegawaiController.updateValidtyPegawai)
+
 router.delete('/',pegawaiController.deletePegawai)
 
 module.exports = router
