@@ -8,6 +8,7 @@ const pegawaiRoutes = require('./src/routes/pegawai')
 const sifatRoutes = require('./src/routes/sifat')
 const sertifikatRoutes = require('./src/routes/sertifikat')
 const diklatRoutes = require('./src/routes/diklat')
+const decisionRoutes = require('./src/routes/decision')
 
 const fileStorage = multer.diskStorage({
     destination: (req,res,cb) => {
@@ -40,6 +41,8 @@ app.use('/trait',sifatRoutes)
 app.use('/certificate',sertifikatRoutes)
 
 app.use('/diklat',diklatRoutes)
+
+app.use('/decision',decisionRoutes)
 
 app.listen(port, () => {
     console.log(`Server started on port`,port);
