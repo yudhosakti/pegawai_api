@@ -427,6 +427,120 @@ const getRecentPegawai = async(req,response) => {
     }
 }
 
+const getAllPegawaiDetail = async(req,response) => {
+    try {
+
+        const [dataPegawai] = await pegawaiModel.getAllPegawai()
+
+        const [kelebihanPegawai] =await sifatModel.getAllKelebihanPegawai()
+
+        const [kekuranganPegawai] = await sifatModel.getAllKekuranganPegawai()
+
+        const [diklatPegawai] = await diklatModel.getAlldiklat()
+
+        const [sertifikatPegawai] = await sertifikatModel.getAllSertifikat()
+
+        let dataFinal = []
+
+        let kelebihanTemp = []
+
+        let pegawaiTemp = []
+
+        let kelemahanTemp = []
+
+        let diklatTemp = []
+
+        let sertifikatTemp = []
+
+
+        for (let index = 0; index < dataPegawai.length; index++) {
+            var jenis_kelamin = ''
+            var foto = ''
+            if (dataPegawai[index].jenis_kelamin == 'L') {
+                jenis_kelamin = "Laki-Laki"
+            } else {
+                jenis_kelamin = "Perempuan"
+            }
+            if (dataPegawai[index].foto != null) {
+                foto = hostNetwork.host+dataPegawai[index].foto
+            }
+            pegawaiTemp.push({
+                "id_pegawai" : dataPegawai[index].id_pegawai,
+            })
+            for (let index = 0; index < kelebihanPegawai.length; index++) {
+                 
+                if (pegawaiTemp[0].id_pegawai == kelebihanPegawai[index].id_pegawai) {
+                    kelebihanTemp.push(kelebihanPegawai[index])
+                }
+                
+            }
+
+
+            for (let index = 0; index < kekuranganPegawai.length; index++) {
+                 
+                if (pegawaiTemp[0].id_pegawai == kekuranganPegawai[index].id_pegawai) {
+                    kelemahanTemp.push(kekuranganPegawai[index])
+                }
+                
+            }
+
+            for (let index = 0; index < diklatPegawai.length; index++) {
+                 
+                if (pegawaiTemp[0].id_pegawai == diklatPegawai[index].id_pegawai) {
+                    diklatTemp.push(diklatPegawai[index])
+                }
+                
+            }
+            for (let index = 0; index < sertifikatPegawai.length; index++) {
+                 
+                if (pegawaiTemp[0].id_pegawai == sertifikatPegawai[index].id_pegawai) {
+                    sertifikatTemp.push(sertifikatPegawai[index])
+                }
+                
+            }
+
+            dataFinal.push({
+                "id_pegawai" : dataPegawai[index].id_pegawai,
+                "old_nip" : dataPegawai[index].old_nip,
+                "new_nip" : dataPegawai[index].new_nip,
+                "nama_pegawai" : dataPegawai[index].nama_pegawai,
+                "foto" : foto, 
+                "jenis_kelamin" : jenis_kelamin,
+                "tempat_lahir" : dataPegawai[index].tempat_lahir,
+                "tanggal_lahir" : globalFunc.formatTanggal(dataPegawai[index].tanggal_lahir),
+                "golongan" : dataPegawai[index].golongan,
+                "pendidikan" : dataPegawai[index].pendidikan,
+                "jabatan" : dataPegawai[index].jabatan,
+                "pengalaman_jabatan" : dataPegawai[index].pengalaman_jabatan,
+                "is_valid" : dataPegawai[index].is_valid,
+                "kelebihan" : kelebihanTemp,
+                "Kekurangan" : kelemahanTemp,
+                "diklat" : diklatTemp,
+                "sertifikat" : sertifikatTemp
+            })
+        kelebihanTemp = []
+
+        pegawaiTemp = []
+
+        kelemahanTemp = []
+
+        diklatTemp = []
+
+        sertifikatTemp = []
+            
+        }
+
+        response.json({
+            data: dataFinal
+        })
+        
+    } catch (error) {
+        response.status(500).json({
+            messsage: error
+        })
+    }
+}
+
 
 module.exports = {
     addPegawai,
@@ -439,5 +553,6 @@ module.exports = {
     updateProfilePegawai,
     updateValidtyPegawai,
     getRecentPegawai,
-    getAllValidatePegawai
+    getAllValidatePegawai,
+    getAllPegawaiDetail
 }

@@ -16,6 +16,11 @@ const getAllKelebihanByIdPegawai = (id_pegawai) => {
     return dbConnection.execute(query)
 }
 
+const getAllKelebihanPegawai = () => {
+    const query = `SELECT * FROM tbl_kelebihan_pegawai`
+    return dbConnection.execute(query)
+}
+
 const updateKelebihanPegawai = (id_kelebihan,kelebihan,id_user) => {
     const query = `UPDATE tbl_kelebihan_pegawai SET id_user= ${id_user}, kelebihan='${kelebihan}' WHERE id_kelebihan = ${id_kelebihan}`
     return dbConnection.execute(query)
@@ -42,6 +47,11 @@ const getAllKekuranganByIdPegawai = (id_pegawai) => {
     return dbConnection.execute(query)
 }
 
+const getAllKekuranganPegawai = () => {
+    const query = `SELECT * FROM tbl_kekurangan_pegawai`
+    return dbConnection.execute(query)
+}
+
 const updateKekuranganPegawai = (id_kekurangan,kekurangan,id_user) => {
     const query = `UPDATE tbl_kekurangan_pegawai SET id_user= ${id_user}, kekurangan='${kekurangan}' WHERE id_kekurangan = ${id_kekurangan}`
     return dbConnection.execute(query)
@@ -62,5 +72,7 @@ module.exports = {
     getAllKekuranganByIdPegawai,
     getSingleKekuranganPegawai,
     updateKekuranganPegawai,
-    deleteKekuranganPegawai
+    deleteKekuranganPegawai,
+    getAllKelebihanPegawai,
+    getAllKekuranganPegawai
 }

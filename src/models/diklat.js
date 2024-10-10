@@ -23,6 +23,12 @@ const getAlldiklatByIdPegawai = (id_pegawai) => {
     return dbConnection.execute(query)
 }
 
+
+const getAlldiklat = () => {
+    const query =`SELECT * FROM tbl_diklat_pegawai`
+    return dbConnection.execute(query)
+}
+
 const updateDiklatPegawai = (id_diklat,diklat,id_user,foto) => {
     if (foto == '') {
     const query = `UPDATE tbl_diklat_pegawai SET id_user= ${id_user}, diklat='${diklat}' WHERE id_diklat = ${id_diklat}`
@@ -44,5 +50,6 @@ module.exports = {
     getSingleDiklatPegawai,
     getAlldiklatByIdPegawai,
     updateDiklatPegawai,
-    deleteDiklatPegawai
+    deleteDiklatPegawai,
+    getAlldiklat
 }

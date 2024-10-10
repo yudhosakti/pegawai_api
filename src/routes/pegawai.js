@@ -8,6 +8,8 @@ router.post('/',pegawaiController.addPegawai)
 
 router.get('/',pegawaiController.getAllPegawai)
 
+router.get('/detail/all',pegawaiController.getAllPegawaiDetail)
+
 router.get('/single', pegawaiController.getSinglePegawai)
 
 router.get('/search', pegawaiController.getSearchPegawaiByName)

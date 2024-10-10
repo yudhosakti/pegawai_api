@@ -1,6 +1,8 @@
 const decisionModel = require('../models/decision')
 const adminModel = require('../models/admin')
 
+const globalFunc = require('./global_function')
+
 const getAllDecisionByIdUser = async(req,response) => {
     const idUser = req.query.id_user
     try {
@@ -11,8 +13,21 @@ const getAllDecisionByIdUser = async(req,response) => {
                 message: "Data Not Found"
             })
         } else {
+            let dataFix = []
+            
+            for (let index = 0; index < data.length; index++) {
+                dataFix.push({
+                    "id_decision" : data[index].id_decision,
+                    "id_user" : data[index].id_user,
+                    "title" : data[index].title,
+                    "last_chat" : data[index].last_chat,
+                    "create_at" : globalFunc.getDateTimeNow(data[index].create_at)
+                })
+                
+            }
+
             response.json({
-                data: data
+                data: dataFix
             })
         }
         
@@ -34,8 +49,21 @@ const getAllChatByIdDecision = async(req,response) => {
                 message: "Data Not Found"
             })
         } else {
+            let dataFix = []
+            
+            for (let index = 0; index < data.length; index++) {
+                dataFix.push({
+                    "id_chat" : data[index].id_dchat,
+                    "id_decision" : data[index].id_decision,
+                    "message" : data[index].message,
+                    "sender" : data[index].sender,
+                    "send_at" : globalFunc.getDateTimeNow(data[index].send_at)
+                })
+                
+            }
+
             response.json({
-                data: data
+                data: dataFix
             })
         }
         

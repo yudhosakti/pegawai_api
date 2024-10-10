@@ -37,11 +37,17 @@ const  getAllSertifikatByIdPegawai = (id_pegawai) => {
     return dbConnection.execute(query)
 }
 
+const  getAllSertifikat = () => {
+    const query = `SELECT * FROM tbl_sertifikat_pegawai`
+    return dbConnection.execute(query)
+}
+
 module.exports = {
     addSertifikatPegawai,
     updateSertifikatPegawai,
     deleteSertifikatPegawai,
     getSingleSertifikat,
-    getAllSertifikatByIdPegawai
+    getAllSertifikatByIdPegawai,
+    getAllSertifikat
 }
 
