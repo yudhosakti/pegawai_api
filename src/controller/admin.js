@@ -1,14 +1,23 @@
 const adminModel = require('../models/admin')
 const fs = require('fs');
+const hostNetwork = require('../config/host')
+const globalFunc = require('../controller/global_function')
 const getAllAdmin = async(req,response)=> {
     try {
         const [data] = await adminModel.getAllAdmin()
         let dataFinal = []
         for (let index = 0; index < data.length; index++) {
+            foto = ''
+            if (data[index].avatar != null) {
+                foto = hostNetwork.host+data[index].avatar
+            }
             dataFinal.push({
                 id_user: data[index].id_user,
                 username: data[index].username,
-                avatar: data[index].avatar
+                role: data[index].role,
+                email: data[index].email,
+                login_at : globalFunc.getDateTimeNow(data[index].login_at),
+                avatar: foto
             })
             
         }
@@ -36,8 +45,22 @@ const loginAdmin = async(req,response) => {
         } else {
           await adminModel.updateLoginTime(data[0].id_user).then(async(result) => {
             const [dataNew] = await adminModel.loginAdmin(dataInsert.email,dataInsert.password)
-                response.json({
-             data: dataNew[0]
+            let dataFinal = []
+            foto = ''
+            if (dataNew[0].avatar != null) {
+                foto = hostNetwork.host+data[index].avatar
+            }
+            dataFinal.push({
+                id_user: dataNew[0].id_user,
+                username: dataNew[0].username,
+                role: dataNew[0].role,
+                email: dataNew[0].email,
+                login_at : globalFunc.getDateTimeNow(dataNew[0].login_at),
+                avatar: foto
+            })
+            
+            response.json({
+             data: dataFinal[0]
           })  
           })
           
@@ -165,10 +188,17 @@ const getRecentUser = async(req,response) => {
         const [data] = await adminModel.getRecentUser()
         let dataFinal = []
         for (let index = 0; index < data.length; index++) {
+            foto = ''
+            if (data[index].avatar != null) {
+                foto = hostNetwork.host+data[index].avatar
+            }
             dataFinal.push({
                 id_user: data[index].id_user,
                 username: data[index].username,
-                avatar: data[index].avatar
+                role: data[index].role,
+                email: data[index].email,
+                login_at : globalFunc.getDateTimeNow(data[index].login_at),
+                avatar: foto
             })
             
         }
@@ -184,6 +214,29 @@ const getRecentUser = async(req,response) => {
     }
 }
 
+const addUser = async(req,response) => {
+    const dataInsert = req.body
+    let image = '';
+    if (req.file) {
+        image = req.file.path.replace(/\\/g, '/'); 
+    }
+    try {
+        await adminModel.addUser(dataInsert.username,dataInsert.email,dataInsert.password,image,dataInsert.role).then((value) => {
+            response.json({
+                message: "Data Insert Success"
+            })
+        })
+        
+    } catch (error) {
+        if (image != '') {
+            globalFunc.hapusGambar(fs,image)
+        }
+        response.status(500).json({
+            message: error
+        })
+    }
+}
+
 
 
 module.exports = {
@@ -192,5 +245,6 @@ module.exports = {
     addAdmin,
     updateAdmin,
     deleteAdmin,
-    getRecentUser
+    getRecentUser,
+    addUser
 }

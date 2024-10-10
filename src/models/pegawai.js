@@ -41,12 +41,17 @@ const updateProfilePegawai = (id_pegawai,image) => {
 }
 
 const getAllPegawai = () => {
-    const query = `SELECT * FROM tbl_pegawai`
+    const query = `SELECT * FROM tbl_pegawai WHERE is_valid = 1`
+    return dbConnection.execute(query)
+}
+
+const getAllValidatePegawai = () => {
+    const query = `SELECT * FROM tbl_pegawai INNER JOIN tbl_user ON tbl_pegawai.id_user = tbl_user.id_user WHERE is_valid = 0`
     return dbConnection.execute(query)
 }
 
 const getRecentPegawai = () => {
-    const query = `SELECT * FROM tbl_pegawai ORDER BY id_pegawai DESC LIMIT 5`
+    const query = `SELECT * FROM tbl_pegawai WHERE is_valid = 1 ORDER BY id_pegawai DESC LIMIT 5`
     return dbConnection.execute(query)
 }
 
@@ -68,6 +73,7 @@ module.exports = {
     searchPegawai,
     updateProfilePegawai,
     validityPegawai,
-    getRecentPegawai
+    getRecentPegawai,
+    getAllValidatePegawai
 
 }

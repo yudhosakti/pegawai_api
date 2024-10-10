@@ -91,6 +91,53 @@ const getAllPegawai = async(req,response) =>{
     }
 }
 
+
+const getAllValidatePegawai = async(req,response) =>{
+    try {
+        const [data] = await pegawaiModel.getAllValidatePegawai()
+        let dataFinal = []
+        for (let index = 0; index < data.length; index++) {
+            var jenis_kelamin = ''
+            var foto = ''
+            if (data[index].jenis_kelamin == 'L') {
+                jenis_kelamin = "Laki-Laki"
+            } else {
+                jenis_kelamin = "Perempuan"
+            }
+            if (data[index].foto != null) {
+                foto = hostNetwork.host+data[index].foto
+            }
+            dataFinal.push({
+                "id_pegawai" : data[index].id_pegawai,
+                "old_nip" : data[index].old_nip,
+                "new_nip" : data[index].new_nip,
+                "nama_pegawai" : data[index].nama_pegawai,
+                "foto" : foto, 
+                "jenis_kelamin" : jenis_kelamin,
+                "tempat_lahir" : data[index].tempat_lahir,
+                "tanggal_lahir" : globalFunc.formatTanggal(data[index].tanggal_lahir),
+                "pangkat" : data[index].pangkat,
+                "golongan" : data[index].golongan,
+                "pendidikan" : data[index].pendidikan,
+                "jabatan" : data[index].jabatan,
+                "pengalaman_jabatan" : data[index].pengalaman_jabatan,
+                "is_valid" : data[index].is_valid,
+                "create_by" : data[index].username
+            })
+            
+        }
+        
+        response.json({
+            data: dataFinal
+        })
+        
+    } catch (error) {
+        response.status(500).json({
+            messsage: error
+        })
+    }
+}
+
 const getSinglePegawai = async(req,response) => {
     const id_pegawai = req.query.id_pegawai
     try {
@@ -368,6 +415,10 @@ const getRecentPegawai = async(req,response) => {
             })
             
         }
+    
+        response.json({
+            data: dataFinal
+        })
         
     } catch (error) {
         response.status(500).json({
@@ -387,5 +438,6 @@ module.exports = {
     getSearchPegawaiByName,
     updateProfilePegawai,
     updateValidtyPegawai,
-    getRecentPegawai
+    getRecentPegawai,
+    getAllValidatePegawai
 }

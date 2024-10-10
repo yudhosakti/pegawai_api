@@ -12,7 +12,11 @@ router.get('/single', pegawaiController.getSinglePegawai)
 
 router.get('/search', pegawaiController.getSearchPegawaiByName)
 
+router.get('/recent', pegawaiController.getRecentPegawai)
+
 router.get('/detail', pegawaiController.getDetailPegawaiFull)
+
+router.get('/validate', pegawaiController.getAllValidatePegawai)
 
 router.put('/',pegawaiController.updatePegawai)
 

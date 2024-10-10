@@ -1,7 +1,7 @@
 const dbConnection = require('../config/koneksi')
 
 const getAllAdmin = ()=> {
-    const query = `SELECT * FROM tbl_user `
+    const query = `SELECT * FROM tbl_user WHERE status = 'Aktif' `
     return dbConnection.execute(query)
 }
 
@@ -41,8 +41,19 @@ const updateLoginTime = (id_user)=> {
 }
 
 const getRecentUser = () => {
-    const query = `SELECT * FROM tbl_user ORDER BY login_at DESC LIMIT 5`
+    const query = `SELECT * FROM tbl_user WHERE Status = 'Aktif' ORDER BY login_at DESC LIMIT 5`
     return dbConnection.execute(query)
+}
+
+const addUser = (username,email,password,avatar,role)=> {
+    if (avatar == '') {
+        const query = `INSERT INTO tbl_user(username,email,password,avatar,role) VALUES ('${username}','${email}',SHA1('${password}'),NULL,'${role}')`
+        return dbConnection.execute(query)
+    } else {
+        const query = `INSERT INTO tbl_user(username,email,password,avatar,role) VALUES ('${username}','${email}',SHA1('${password}'),'${avatar}','${role}')`
+        return dbConnection.execute(query)
+    }
+    
 }
 
 
@@ -54,5 +65,6 @@ module.exports = {
     loginAdmin,
     getSingleAdmin,
     updateLoginTime,
-    getRecentUser
+    getRecentUser,
+    addUser
 }
