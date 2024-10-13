@@ -1,7 +1,8 @@
 const decisionModel = require('../models/decision')
 const adminModel = require('../models/admin')
-
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const globalFunc = require('./global_function')
+require('dotenv').config()
 
 const getAllDecisionByIdUser = async(req,response) => {
     const idUser = req.query.id_user
@@ -107,10 +108,30 @@ const addChatDecisionChat = async(req,response) => {
     const dataInsert = req.body
     try {
 
-        await decisionModel.addChatDecisionChat(dataInsert.id_decision,dataInsert.sender,dataInsert.message).then((result) => {
-            response.json({
-                message: "Chat Added"
+        await decisionModel.addChatDecisionChat(dataInsert.id_decision,dataInsert.sender,dataInsert.message).then(async(result) => {
+            const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+            const prompt = dataInsert.prompt;
+
+            const responseGemini = await model.generateContent(prompt);
+            console.log(prompt)
+            console.log(responseGemini.response.text())
+            await decisionModel.addChatWithResponse(dataInsert.id_decision,responseGemini.response.text(),'AI').then((value) => {
+                const [fixValue] = value 
+                dataFinal = {
+                    "id_chat" : fixValue[0][0].id_dchat,
+                    "id_decision": fixValue[0][0].id_decision,
+                    "message" : fixValue[0][0].message,
+                    "sender" : fixValue[0][0].sender,
+                    "send_at" : globalFunc.getDateTimeNow(fixValue[0][0].send_at)
+                }
+                response.json({
+                    message: "Chat Added",
+                    data: dataFinal
+                })
             })
+          
         })
         
     } catch (error) {

@@ -514,7 +514,7 @@ const getAllPegawaiDetail = async(req,response) => {
                 "pengalaman_jabatan" : dataPegawai[index].pengalaman_jabatan,
                 "is_valid" : dataPegawai[index].is_valid,
                 "kelebihan" : kelebihanTemp,
-                "Kekurangan" : kelemahanTemp,
+                "kekurangan" : kelemahanTemp,
                 "diklat" : diklatTemp,
                 "sertifikat" : sertifikatTemp
             })

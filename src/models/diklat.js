@@ -3,7 +3,7 @@ const dbConnection = require('../config/koneksi')
 const addDiklatPegawai = (id_pegawai,diklat,id_user,foto) => {
     if (foto == '') {
         const query = `INSERT INTO tbl_diklat_pegawai(id_pegawai,id_user,diklat,foto) 
-    VALUES (${id_pegawai},${id_user},'${diklat},NULL)`
+    VALUES (${id_pegawai},${id_user},'${diklat}',NULL)`
     return dbConnection.execute(query)
     }else{
         const query = `INSERT INTO tbl_diklat_pegawai(id_pegawai,id_user,diklat,foto) 

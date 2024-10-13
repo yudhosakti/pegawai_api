@@ -26,6 +26,7 @@ const addDiklatPegawai = async(req,response) => {
 
         
     } catch (error) {
+        console.log(error)
         response.status(500).json({
             message: error
         })
