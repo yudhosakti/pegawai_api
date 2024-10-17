@@ -37,7 +37,7 @@ const loginAdmin = async(req,response) => {
     const  dataInsert = req.body
     try {
         const [data] = await adminModel.loginAdmin(dataInsert.email,dataInsert.password)
-
+        console.log(data)
         if (data.length < 1) {
             response.status(404).json({
                 message: "User Not Found"
@@ -48,7 +48,7 @@ const loginAdmin = async(req,response) => {
             let dataFinal = []
             foto = ''
             if (dataNew[0].avatar != null) {
-                foto = hostNetwork.host+data[index].avatar
+                foto = hostNetwork.host+dataNew[0].avatar
             }
             dataFinal.push({
                 id_user: dataNew[0].id_user,
@@ -158,9 +158,19 @@ const updateAdmin = async(req,response) => {
                 }
                 })
             }
-            await adminModel.updateAdmin(dataInsert.id_user,image,dataInsert.username).then((result) => {
+            await adminModel.updateAdmin(dataInsert.id_user,image,dataInsert.username,dataInsert.email).then(async(result) => {
+
+                const [updateData] = await adminModel.getSingleAdmin(dataInsert.id_user)
                  response.json({
-                    message: "Update Success"
+                    message: "Update Success",
+                    data: {
+                        id_user: updateData[0].id_user,
+                        username: updateData[0].username,
+                        role: updateData[0].role,
+                        email: updateData[0].email,
+                        login_at : globalFunc.getDateTimeNow(updateData[0].login_at),
+                        avatar: hostNetwork.host+updateData[0].avatar
+                    }
                  })
             })
         }

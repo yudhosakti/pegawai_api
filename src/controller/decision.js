@@ -86,8 +86,7 @@ const addChatDecision = async(req,response) => {
         } else {
             await decisionModel.addChatDecision(dataInsert.id_admin,dataInsert.title).then((value) => {
                 const [data] = value
-                console.log(data[0][0].id_pegawai
-                )
+                console.log(data[0][0].id_decision)
                 response.json({
                     id: data[0][0].id_decision,
                     message: "Data Insert Success"
@@ -115,9 +114,13 @@ const addChatDecisionChat = async(req,response) => {
             const prompt = dataInsert.prompt;
 
             const responseGemini = await model.generateContent(prompt);
-            console.log(prompt)
+            console.log(responseGemini.response)
+            let message = responseGemini.response.text()
+            if (message == 'Error') {
+               message = "Internal Error Please Chat Again"
+            }
             console.log(responseGemini.response.text())
-            await decisionModel.addChatWithResponse(dataInsert.id_decision,responseGemini.response.text(),'AI').then((value) => {
+            await decisionModel.addChatWithResponse(dataInsert.id_decision,message,'AI').then((value) => {
                 const [fixValue] = value 
                 dataFinal = {
                     "id_chat" : fixValue[0][0].id_dchat,

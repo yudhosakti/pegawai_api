@@ -6,7 +6,7 @@ const getAllAdmin = ()=> {
 }
 
 const loginAdmin =(email,password)=> {
-    const query = `SELECT * FROM tbl_user WHERE tbl_user.email = '${email}' AND tbl_user.password = SHA1('${password}') LIMIT 1`
+    const query = `SELECT * FROM tbl_user WHERE tbl_user.email = '${email}' AND tbl_user.password = SHA1('${password}') AND status = 'Aktif' LIMIT 1`
     return dbConnection.execute(query)
 }
 
@@ -15,12 +15,12 @@ const addAdmin = (email,username,password)=> {
     return dbConnection.execute(query)
 }
 
-const updateAdmin = (id_user,avatar,username) => {
+const updateAdmin = (id_user,avatar,username,email) => {
     if (avatar == '') {
-        const query = `UPDATE tbl_user SET username='${username}' WHERE id_user = ${id_user}`
+        const query = `UPDATE tbl_user SET username='${username}',email='${email}' WHERE id_user = ${id_user}`
         return dbConnection.execute(query)
     } else {
-        const query = `UPDATE tbl_user SET username='${username}',avatar='${avatar}' WHERE id_user = ${id_user}`
+        const query = `UPDATE tbl_user SET username='${username}',email='${email}',avatar='${avatar}' WHERE id_user = ${id_user}`
     return dbConnection.execute(query)
     }
     
