@@ -1,7 +1,9 @@
 const adminModel = require('../models/admin')
+const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const hostNetwork = require('../config/host')
 const globalFunc = require('../controller/global_function')
+require('dotenv').config()
 const getAllAdmin = async(req,response)=> {
     try {
         const [data] = await adminModel.getAllAdmin()
@@ -50,6 +52,12 @@ const loginAdmin = async(req,response) => {
             if (dataNew[0].avatar != null) {
                 foto = hostNetwork.host+dataNew[0].avatar
             }
+            const expired = 60 * 60 *24 * 7
+            const payload = {
+                id_user: dataNew[0].id_user
+            }
+            var token = jwt.sign(payload, process.env.JWT_KEY, {expiresIn: expired});
+            console.log(token)
             dataFinal.push({
                 id_user: dataNew[0].id_user,
                 username: dataNew[0].username,
@@ -60,7 +68,8 @@ const loginAdmin = async(req,response) => {
             })
             
             response.json({
-             data: dataFinal[0]
+             data: dataFinal[0],
+             token: token
           })  
           })
           
@@ -247,6 +256,44 @@ const addUser = async(req,response) => {
     }
 }
 
+const getSingleAdmin = async(req,response)=> {
+   const idAdmin = req.query.id_user
+   
+   try {
+
+    const [data] = await adminModel.getSingleAdmin(idAdmin)
+
+    if (data.length == 0) {
+        response.status(404).json({
+            message: "USer Not Found"
+        })
+    } else {
+        let foto = ''
+        if (data[0].avatar != null) {
+            foto = hostNetwork.host+data[0].avatar
+        }
+
+        response.json({
+            data: {
+                id_user: data[0].id_user,
+                username: data[0].username,
+                role: data[0].role,
+                email: data[0].email,
+                password: data[0].password,
+                login_at : globalFunc.getDateTimeNow(data[0].login_at),
+                avatar: foto
+            }
+           
+        })
+    }
+    
+   } catch (error) {
+      response.status(500).json({
+        message : error
+      })
+   }
+}
+
 
 
 module.exports = {
@@ -256,5 +303,6 @@ module.exports = {
     updateAdmin,
     deleteAdmin,
     getRecentUser,
-    addUser
+    addUser,
+    getSingleAdmin
 }

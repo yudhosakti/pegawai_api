@@ -5,6 +5,7 @@ const express = require('express')
 const router = express.Router()
 
 router.get('/',adminController.getAllAdmin)
+router.get('/single',adminController.getSingleAdmin)
 router.get('/recent',adminController.getRecentUser)
 
 router.post('/login',adminController.loginAdmin)
