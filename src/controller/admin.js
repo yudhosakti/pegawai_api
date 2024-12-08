@@ -84,6 +84,56 @@ const loginAdmin = async(req,response) => {
     }
 }
 
+
+const loginAdminImage = async(req,response) => {
+    const  dataInsert = req.body
+    try {
+        const [data] = await adminModel.loginAdminImage(dataInsert.email)
+        console.log(data)
+        if (data.length < 1) {
+            response.status(404).json({
+                message: "User Not Found"
+        })
+        } else {
+          await adminModel.updateLoginTime(data[0].id_user).then(async(result) => {
+            const [dataNew] = await adminModel.loginAdminImage(dataInsert.email)
+            let dataFinal = []
+            foto = ''
+            if (dataNew[0].avatar != null) {
+                foto = hostNetwork.host+dataNew[0].avatar
+            }
+            const expired = 60 * 60 *24 * 7
+            const payload = {
+                id_user: dataNew[0].id_user
+            }
+            var token = jwt.sign(payload, process.env.JWT_KEY, {expiresIn: expired});
+            console.log(token)
+            dataFinal.push({
+                id_user: dataNew[0].id_user,
+                username: dataNew[0].username,
+                role: dataNew[0].role,
+                email: dataNew[0].email,
+                login_at : globalFunc.getDateTimeNow(dataNew[0].login_at),
+                avatar: foto
+            })
+            
+            response.json({
+             data: dataFinal[0],
+             token: token
+          })  
+          })
+          
+        }
+
+
+        
+    } catch (error) {
+        response.status(500).json({
+            message: error
+        })
+    }
+}
+
 const addAdmin = async(req,response) => {
     const dataInsert = req.body
     try {
@@ -202,6 +252,76 @@ const updateAdmin = async(req,response) => {
     }
 }
 
+
+
+const updateUser = async(req,response) => {
+    const dataInsert = req.body
+    let image = '';
+    if (req.file) {
+        image = req.file.path.replace(/\\/g, '/'); 
+    }
+    try {
+        const [data] = await adminModel.getSingleAdmin(dataInsert.id_user)
+        if (data.length == 0) {
+            if (image != '') {
+                let path = image
+            fs.unlink(path,(err) => {
+                if (err) {
+                    console.log(err)
+                    }else{
+                    console.log("Berhasil Hapus")
+                    }
+                    })
+            }
+            response.status(404).json({
+                message: "User Not Found"
+            })
+        } else {
+            if (data[0].avatar != null && image != '') {
+                let path = data[0].avatar
+              fs.unlink(path,(err) => {
+            if (err) {
+                console.log(err)
+                }else{
+                console.log("Berhasil Hapus")
+                }
+                })
+            }
+            await adminModel.updateUser(dataInsert.id_user,image,dataInsert.username,dataInsert.email,dataInsert.role).then(async(result) => {
+
+                const [updateData] = await adminModel.getSingleAdmin(dataInsert.id_user)
+                 response.json({
+                    message: "Update Success",
+                    data: {
+                        id_user: updateData[0].id_user,
+                        username: updateData[0].username,
+                        role: updateData[0].role,
+                        email: updateData[0].email,
+                        login_at : globalFunc.getDateTimeNow(updateData[0].login_at),
+                        avatar: hostNetwork.host+updateData[0].avatar
+                    }
+                 })
+            })
+        }
+        
+        
+    } catch (error) {
+        if (image != '') {
+            let path = image
+        fs.unlink(path,(err) => {
+            if (err) {
+                console.log(err)
+                }else{
+                console.log("Berhasil Hapus")
+                }
+                })
+        }
+        response.status(500).json({
+            message: error
+    })
+    }
+}
+
 const getRecentUser = async(req,response) => {
     try {
         const [data] = await adminModel.getRecentUser()
@@ -232,6 +352,48 @@ const getRecentUser = async(req,response) => {
     })
     }
 }
+
+
+const getLogUser = async(req,response) => {
+    const dataId = req.query.id_user
+    try {
+        const [data] = await adminModel.getSingleAdmin(dataId)
+
+        if (data.length == 0) {
+            response.status(404).json({
+                message: "User Not Found"
+            })
+        } else {
+            role = data[0].role
+            const [logData] = await adminModel.getLogUser(role,dataId)
+            let dataFinal = []
+
+            for (let index = 0; index < logData.length; index++) {
+                dataFinal.push({
+                    id_log: logData[index].id_log,
+                    id_user: logData[index].id_user,
+                    username: logData[index].username,
+                    role: logData[index].role,
+                    status: logData[index].status,
+                    message: logData[index].message,
+                    create_at: globalFunc.formatTanggal(logData[index].create_at)
+                })
+                
+            }
+
+            response.json({
+                data: dataFinal
+            })
+
+        }
+        
+    } catch (error) {
+        response.status(500).json({
+            message: error
+    })
+    }
+}
+
 
 const addUser = async(req,response) => {
     const dataInsert = req.body
@@ -304,5 +466,8 @@ module.exports = {
     deleteAdmin,
     getRecentUser,
     addUser,
-    getSingleAdmin
+    getSingleAdmin,
+    loginAdminImage,
+    updateUser,
+    getLogUser
 }

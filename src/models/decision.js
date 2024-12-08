@@ -30,11 +30,11 @@ const getAllChatByIdDecision = (id_decision) => {
     const query = `SELECT * FROM tbl_decision_chat WHERE id_decision = ${id_decision}`
     return dbConnection.execute(query)
 }
-
 const addChatWithResponse = (id_decision,message,sender) => {
-    const query = `CALL chat_dss(${id_decision},'${sender}','${message}');`
-    return dbConnection.execute(query)
+    const query = 'CALL chat_dss(?, ?, ?)';
+    return dbConnection.execute(query,[id_decision, sender, `${message}`])
 }
+
 
 
 module.exports = {
